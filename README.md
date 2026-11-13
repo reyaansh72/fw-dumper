@@ -13,15 +13,27 @@ Install dependencies from the project directory:
 python -m pip install -r requirements.txt
 ```
 
-## Commands
+## Interactive CLI
 
-Run commands from the project directory with `python app.py`.
-
-### Start a dump
+Start the shell from the project directory:
 
 ```bash
-python app.py start-dump http://192.168.1.1
+python app.py
 ```
+
+You will see a `fw-dumper>` prompt. Enter commands there and run as many as needed without restarting the program:
+
+```text
+fw-dumper> start-dump http://192.168.1.1
+fw-dumper> ls-dump
+fw-dumper> info http://192.168.1.1
+fw-dumper> delete-dump 20261113_143012_123456
+fw-dumper> exit
+```
+
+Type `help` inside the shell to list available commands. Use `exit` or `quit` to leave.
+
+### Start a dump
 
 The command displays available page and HTTP metadata, then downloads the default asset list. Files are saved in a timestamped folder under `dumps/`; a ZIP containing that dump is created alongside the folder.
 
@@ -32,47 +44,54 @@ Options:
 --no-zip          Skip creating the ZIP archive
 ```
 
-For example:
+For example, at the `fw-dumper>` prompt:
 
 ```bash
-python app.py start-dump https://192.168.1.1 --delay 0.5
+start-dump https://192.168.1.1 --delay 0.5
 ```
 
 ### List saved dumps
 
-```bash
-python app.py ls-dump
+```text
+fw-dumper> ls-dump
 ```
 
 Shows each dump's timestamp ID, number of downloaded files, and whether a ZIP archive exists.
 
 ### Delete a dump
 
-```bash
-python app.py delete-dump 20261113_143012_123456
+```text
+fw-dumper> delete-dump 20261113_143012_123456
 ```
 
 The command asks for confirmation before deleting the selected dump and its matching ZIP archive. Add `--yes` to skip the prompt:
 
-```bash
-python app.py delete-dump 20261113_143012_123456 --yes
+```text
+fw-dumper> delete-dump 20261113_143012_123456 --yes
 ```
 
 Use the dump ID printed by `ls-dump`.
 
 ### Inspect a device
 
-```bash
-python app.py info http://192.168.1.1
+```text
+fw-dumper> info http://192.168.1.1
 ```
 
 Displays HTTP response details and basic page metadata without downloading the asset list.
 
 ## Help
 
+```text
+fw-dumper> help
+```
+
+For scripts or one-off invocations, the same commands can still be passed directly:
+
 ```bash
+python app.py ls-dump
+python app.py start-dump http://192.168.1.1 --no-zip
 python app.py --help
-python app.py start-dump --help
 ```
 
 ## How it works

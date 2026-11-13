@@ -1,6 +1,7 @@
 import argparse
 import math
 import re
+import shlex
 import shutil
 import sys
 import zipfile
@@ -99,6 +100,37 @@ def build_parser():
     return parser
 
 
+def run_shell():
+    print("FW Dumper interactive shell. Type 'help' for commands or 'exit' to quit.")
+    while True:
+        try:
+            line = input("fw-dumper> ").strip()
+        except (EOFError, KeyboardInterrupt):
+            print()
+            return 0
+
+        if not line:
+            continue
+        if line.lower() in ("exit", "quit"):
+            return 0
+        if line.lower() in ("help", "?"):
+            build_parser().print_help()
+            print("\nShell commands: help, exit, quit")
+            continue
+
+        try:
+            command_args = shlex.split(line)
+        except ValueError as error:
+            print(f"Could not parse command: {error}", file=sys.stderr)
+            continue
+
+        try:
+            main(command_args)
+        except SystemExit as error:
+            if error.code not in (0, None):
+                continue
+
+
 def create_archive(dump_dir, url):
     parsed_url = urlparse(url)
     hostname = parsed_url.hostname or "device"
@@ -192,6 +224,9 @@ def run_start_dump(url, delay, no_zip):
 
 
 def main(argv=None):
+    if argv is None and len(sys.argv) == 1:
+        return run_shell()
+
     parser = build_parser()
     args = parser.parse_args(argv)
 
