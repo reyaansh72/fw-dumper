@@ -1,0 +1,10 @@
+# Python cache (all directories)
+__pycache__/
+**/__pycache__/
+*.py[cod]
+
+# ZIP archives
+**/*.zip
+
+# Dumper output
+dumps/
